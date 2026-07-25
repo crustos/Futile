@@ -116,7 +116,7 @@ public class PRAtlasGenerator
 			PRAtlasElement element = new PRAtlasElement(this, fileName);
 			element.filePath = filePath;
 
-			Texture2D texture = new Texture2D(0,0,TextureFormat.ARGB32,false,false);
+			Texture2D texture = new Texture2D(1,1,TextureFormat.ARGB32,false,false);
 			texture.wrapMode = TextureWrapMode.Clamp; //so we don't get pixels from the other edge when scaling
 			texture.filterMode = FilterMode.Trilinear;
 			texture.LoadImage(File.ReadAllBytes(filePath));
