@@ -149,9 +149,13 @@ public class FFont
 	
 	private string _name;
 	private FAtlasElement _element;
+#if !CRUST
 	private string _configPath;
+#endif
 	
+#if !CRUST
 	private FCharInfo[] _charInfos;
+#endif
 	private Dictionary<uint,FCharInfo> _charInfosByID; //chars with the index of array being the char id
 	private FKerningInfo[] _kerningInfos;
 	private int _kerningCount;
@@ -160,15 +164,52 @@ public class FFont
 	
 	private float _lineHeight;
 	//private float _lineBase;
+#if !CRUST
 	private int _configWidth;
+#endif
 	//private int _configHeight;
+#if !CRUST
 	private float _configRatio;
+#endif
 	
 	private FTextParams _textParams;
 	
 	private float _offsetX;
 	private float _offsetY;
 	
+#if CRUST
+	//crust: a font's metrics are parsed when the game is packed -- the .fnt config is not read at
+	//runtime -- and the tables are filled through the setters below
+	public FFont (string name, FAtlasElement element, float offsetX, float offsetY, FTextParams textParams)
+	{
+		_name = name;
+		_element = element;
+		_textParams = textParams;
+
+		_offsetX = offsetX; 
+		_offsetY = offsetY;
+
+		_charInfosByID = new Dictionary<uint,FCharInfo>();
+		_kerningInfos = new FKerningInfo[0];
+	}
+	
+	public void SetLineHeight (float lineHeight)
+	{
+		_lineHeight = lineHeight;
+	}
+	
+	public void AddCharInfo (FCharInfo charInfo)
+	{
+		_charInfosByID[(uint)charInfo.charID] = charInfo;
+	}
+	
+	public void SetKerningInfos (FKerningInfo[] kerningInfos, int kerningCount)
+	{
+		_kerningInfos = kerningInfos;
+		_kerningCount = kerningCount;
+	}
+	
+#else
 	public FFont (string name, FAtlasElement element, string configPath, float offsetX, float offsetY, FTextParams textParams)
 	{
 		_name = name;
@@ -422,6 +463,7 @@ public class FFont
 		
 	}
 	
+#endif
 	public FLetterQuadLine[] GetQuadInfoForText(string text, FTextParams labelTextParams)
 	{
 		int lineCount = 0;

@@ -16,6 +16,30 @@ public class FShader
 
 	public static FShader Basic_PixelSnap;
 
+#if CRUST
+	//crust: a shader is one of the engine's built-in modes, named by its index (the order of Init below).
+	//There is no Unity Shader or Material to hold, so there is nothing to Apply.
+	public int index;
+	
+	public FShader (int index)
+	{
+		this.index = index;
+	}
+	
+	public static void Init() //called by Futile
+	{
+		Basic = new FShader(0);
+		Additive = new FShader(1);
+		AdditiveColor = new FShader(2);
+		Solid = new FShader(3);
+		SolidColored = new FShader(4);
+
+		Basic_PixelSnap = new FShader(5);
+		
+		defaultShader = Basic;
+	}
+}
+#else
 	public string name;
 	public Shader shader;
 	public bool needsApply = false;
@@ -72,6 +96,7 @@ public class FBlurShader : FShader
 		set {if(_blurAmount != value) {_blurAmount = value; needsApply = true;}}
 	}
 }
+#endif
 
 
 

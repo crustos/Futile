@@ -148,7 +148,11 @@ public class FNodeEnablerForSingleTouch : FNodeEnabler
 		singleTouchable = node as FSingleTouchableInterface;
 		if(singleTouchable == null)
 		{
+#if CRUST
+			throw (int)FutileError.BadTouchableNode;
+#else
 			throw new FutileException("Trying to enable single touch on a node that doesn't implement FSingleTouchableInterface");	
+#endif
 		}
 	}
 	
@@ -173,7 +177,11 @@ public class FNodeEnablerForMultiTouch : FNodeEnabler
 		
 		if(multiTouchable == null)
 		{
+#if CRUST
+			throw (int)FutileError.BadTouchableNode;
+#else
 			throw new FutileException("Trying to enable multi touch on a node that doesn't implement FMultiTouchableInterface");	
+#endif
 		}
 	}
 	
@@ -197,7 +205,11 @@ public class FNodeEnablerForSmartTouch : FNodeEnabler
 		smartTouchable = node as FSmartTouchableInterface;
 		if(smartTouchable == null)
 		{
+#if CRUST
+			throw (int)FutileError.BadTouchableNode;
+#else
 			throw new FutileException("Trying to enable single touch on a node that doesn't implement FSmartTouchableInterface");	
+#endif
 		}
 	}
 	

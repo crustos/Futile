@@ -153,7 +153,11 @@ public class FScreen
 
 		    if(_futileParams.resLevels.Count == 0)
 		    {
+#if CRUST
+			    throw (int)FutileError.NoResolutionLevel;
+#else
 			    throw new FutileException("You must add at least one FResolutionLevel!");	
+#endif
 		    }
 
 		    float checkLength;
@@ -262,19 +266,33 @@ public class FScreen
         _originY = Mathf.Round(height * _futileParams.origin.y) / height;
 
 		
+#if !CRUST
 		Debug.Log ("Futile: Display scale is " + Futile.displayScale);
+#endif
 		
+#if !CRUST
 		Debug.Log ("Futile: Resource scale is " + Futile.resourceScale);
+#endif
 		
+#if !CRUST
 		Debug.Log ("Futile: Resource suffix is " + _resLevel.resourceSuffix);
+#endif
 		
+#if !CRUST
 		Debug.Log ("FScreen: Screen size in pixels is (" + pixelWidth +"px," + pixelHeight+"px)");
+#endif
 		
+#if !CRUST
 		Debug.Log ("FScreen: Screen size in points is (" + width + "," + height+")");
+#endif
 		
+#if !CRUST
 		Debug.Log ("FScreen: Origin is at (" + _originX*width + "," + _originY*height+")");
+#endif
 		
+#if !CRUST
 		Debug.Log ("FScreen: Initial orientation is " + _currentOrientation);
+#endif
 		
 		_didJustResize = true;
     }
@@ -327,7 +345,9 @@ public class FScreen
 	
 	public void SwitchOrientation (ScreenOrientation newOrientation)
 	{
+#if !CRUST
 		Debug.Log("Futile: Orientation changed to " + newOrientation);
+#endif
 				
 		if(_futileParams.singleOrientation != ScreenOrientation.AutoRotation) //if we're in single orientation mode, just broadcast the change, don't actually change anything
 		{
@@ -341,7 +361,9 @@ public class FScreen
 			
 			UpdateScreenDimensions();
 			
+#if !CRUST
 			Debug.Log ("Orientation switched to " + _currentOrientation + " screen is now: " + pixelWidth+"x"+pixelHeight+"px");
+#endif
 			
 			if(SignalOrientationChange != null) SignalOrientationChange();
 			if(SignalResize != null) SignalResize(true);

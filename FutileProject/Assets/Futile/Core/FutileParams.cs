@@ -7,7 +7,9 @@ public class FResolutionLevel
 	public float maxLength = 1000f;
 	public float displayScale = 1f;
 	public float resourceScale = 1f;
+#if !CRUST
 	public string resourceSuffix = "";
+#endif
 }
 
 public class FutileParams
@@ -42,14 +44,21 @@ public class FutileParams
 		this.supportsPortraitUpsideDown = supportsPortraitUpsideDown;
 	}
 
+#if CRUST
+	//crust: no resourceSuffix -- resource paths are resolved when the game is packed
+	public FResolutionLevel AddResolutionLevel (float maxLength, float displayScale, float resourceScale)
+#else
 	public FResolutionLevel AddResolutionLevel (float maxLength, float displayScale, float resourceScale, string resourceSuffix)
+#endif
 	{
 		FResolutionLevel resLevel = new FResolutionLevel();
 		
 		resLevel.maxLength = maxLength;
 		resLevel.displayScale = displayScale;
 		resLevel.resourceScale = resourceScale;
+#if !CRUST
 		resLevel.resourceSuffix = resourceSuffix;
+#endif
 		
 		bool wasAdded = false;
 		

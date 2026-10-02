@@ -39,6 +39,21 @@ public class FAtlasManager
 		return false;
 	}
 
+#if CRUST
+	//crust: an atlas is registered from data resolved when the game is packed -- the
+	//texture's size -- and its elements follow through atlas.CreateNamedElement()
+	public FAtlas CreateAtlas (string name, int textureWidth, int textureHeight, bool isSingleImage)
+	{
+		if(DoesContainAtlas(name)) return GetAtlasWithName(name); //we already have it
+		
+		FAtlas atlas = new FAtlas(name, _nextAtlasIndex++, textureWidth, textureHeight, isSingleImage);
+		
+		AddAtlas(atlas);
+
+		return atlas;
+	}
+	
+#else
 	public FAtlas LoadAtlasFromTexture (string name, Texture texture)
 	{
 		if(DoesContainAtlas(name)) return GetAtlasWithName(name); //we already have it, don't load it again
@@ -75,6 +90,7 @@ public class FAtlasManager
 		return atlas;
 	}
 	
+#endif
 	private void AddAtlas(FAtlas atlas)
 	{
 		int elementCount = atlas.elements.Count;
@@ -87,7 +103,11 @@ public class FAtlasManager
 			
 			if(_allElementsByName.ContainsKey(element.name))
 			{
+#if CRUST
+				throw (int)FutileError.DuplicateElementName;
+#else
                 throw new FutileException("Duplicate element name '" + element.name +"' found! All element names must be unique!");	
+#endif
 			}
 			else 
 			{
@@ -98,6 +118,7 @@ public class FAtlasManager
 		_atlases.Add(atlas); 
 	}
 
+#if !CRUST
 	public FAtlas LoadAtlas(string atlasPath)
 	{
 		return LoadAtlas(atlasPath,true);
@@ -240,6 +261,7 @@ public class FAtlasManager
 		ActuallyUnloadAtlasOrImage(imagePath);	
 	}
 
+#endif
 	public bool DoesContainElementWithName(string elementName)
 	{
 		return _allElementsByName.ContainsKey(elementName);
@@ -253,11 +275,26 @@ public class FAtlasManager
         } 
         else
         {
+#if CRUST
+           if(!failSilently) throw (int)FutileError.MissingElement;
+#else
            if(!failSilently) SuggestSimilarName(elementName);
+#endif
            return null;
         }
 	}
 
+#if CRUST
+    public FAtlasElement GetElementOrDefault(string elementName, string fallbackElement = "Box")
+    {
+        FAtlasElement element = GetElementWithName(elementName,true);
+
+        if(element != null) return element;
+
+        return GetElementWithName(fallbackElement);
+    }
+
+#else
     public FAtlasElement GetElementOrDefault(string elementName, string fallbackElement = "Box")
     {
         //if(GetElementWithName(elementName,true) == null) SuggestSimilarName(elementName);//uncomment this to make it throw errors
@@ -268,6 +305,8 @@ public class FAtlasManager
         return GetElementWithName(elementName,true) ?? GetElementWithName(fallbackElement);
     }
 
+#endif
+#if !CRUST
     private void SuggestSimilarName(string elementName, bool warning = false)
     {
          //Try to make an educated guess about what they were trying to load
@@ -324,6 +363,7 @@ public class FAtlasManager
         }
     }
 	
+#endif
 	public FFont GetFontWithName(string fontName)
 	{
 		if(_fontsByName.ContainsKey(fontName))
@@ -332,10 +372,29 @@ public class FAtlasManager
         }
         else 
         {
+#if CRUST
+            throw (int)FutileError.MissingFont;
+#else
             throw new FutileException("Couldn't find font named '"+fontName+"'");
+#endif
 		}
 	}
 
+#if CRUST
+	//crust: a font's metrics are parsed when the game is packed; the font is registered here and
+	//its tables filled through the FFont setters
+	public FFont CreateFont (string name, string elementName, float offsetX, float offsetY, FTextParams textParams)
+	{
+		FAtlasElement element = GetElementWithName(elementName);
+		FFont font = new FFont(name,element,offsetX, offsetY, textParams);
+	
+		_fonts.Add(font);
+		_fontsByName.Add (name, font);
+		
+		return font;
+	}
+
+#else
 	public void LoadFont (string name, string elementName, string configPath, float offsetX, float offsetY)
 	{
 		LoadFont (name,elementName,configPath, offsetX, offsetY, new FTextParams());
@@ -350,11 +409,16 @@ public class FAtlasManager
 		_fontsByName.Add (name, font);
 	}
 
+#endif
 	public void AddElement (FAtlasElement element) //It's recommended to use myAtlas.CreateElement() instead of this
 	{
 		if(_allElementsByName.ContainsKey(element.name))
 		{
+#if CRUST
+				throw (int)FutileError.DuplicateElementName;
+#else
 			throw new FutileException("Duplicate element name '" + element.name +"' found! All element names must be unique!");	
+#endif
 		}
 		else 
 		{
@@ -362,6 +426,7 @@ public class FAtlasManager
 		}
 	}
 
+#if !CRUST
 	public void LogAllElementNames()
 	{
 		Debug.Log("Logging all element names:");
@@ -371,6 +436,7 @@ public class FAtlasManager
 			Debug.Log("'"+pair.Value.name+"'");
 		}
 	}
+#endif
 }
 
 

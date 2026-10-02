@@ -58,8 +58,10 @@ public class FAtlasElement
 public class FAtlas
 {
 	private string _name;
+#if !CRUST
 	private string _imagePath;
 	private string _dataPath;
+#endif
 	
 	private int _index;
 	
@@ -67,16 +69,33 @@ public class FAtlas
 	
 	private Dictionary<string, FAtlasElement> _elementsByName = new Dictionary<string, FAtlasElement>();	
 	
+#if !CRUST
 	private Texture _texture;
+#endif
 	private Vector2 _textureSize;
 	
 	private bool _isSingleImage;
 	
+#if !CRUST
 	private bool _isTextureAnAsset = false;
+#endif
 
 	private FAtlasElement _fullElement; //an element that represents the entire atlas
 	
 	//TODO: allow users to pass a dictionary of pre-built atlas data if they want
+#if CRUST
+	//crust: an atlas is built from data resolved when the game is packed -- the texture's
+	//size, and then its elements through CreateNamedElement -- not read from files
+	public FAtlas (string name, int index, int textureWidth, int textureHeight, bool isSingleImage)
+	{
+		_name = name;
+		_index = index;
+		_textureSize = new Vector2(textureWidth,textureHeight);
+		_isSingleImage = isSingleImage;
+		CreateElementForEntireAtlas();
+	}
+	
+#else
 	public FAtlas (string name, Texture texture, int index) //single image
 	{
 		_name = name;
@@ -240,6 +259,7 @@ public class FAtlas
 		Resources.UnloadAsset(dataAsset);
 	}
 	
+#endif
 	private void CreateElementForEntireAtlas()
 	{
 		FAtlasElement element = new FAtlasElement();
@@ -331,7 +351,12 @@ public class FAtlas
 
 	public FAtlasElement CreateNamedElement (string elementName, float leftX, float bottomY, float pixelWidth, float pixelHeight)
 	{
+#if CRUST
+		FAtlasElement element = null;
+		if(_elementsByName.ContainsKey(elementName)) element = _elementsByName[elementName];
+#else
 		FAtlasElement element = _elementsByName[elementName];
+#endif
 
 		if(element == null) //it doesn't exist, so create it (if it does exist we just update it)
 		{
@@ -350,6 +375,7 @@ public class FAtlas
 		return element;
 	}
 
+#if !CRUST
 	public void Unload ()
 	{
 		if(_isTextureAnAsset)
@@ -358,6 +384,7 @@ public class FAtlas
 		}
 	}
 	
+#endif
 	public List<FAtlasElement> elements
 	{
 		get {return _elements;}	
@@ -368,11 +395,13 @@ public class FAtlas
 		get {return _index;}	
 	}
 	
+#if !CRUST
 	public Texture texture
 	{
 		get {return _texture;}	
 	}
 	
+#endif
 	public Vector2 textureSize
 	{
 		get {return _textureSize;}	
@@ -383,6 +412,7 @@ public class FAtlas
 		get {return _name;}	
 	}
 	
+#if !CRUST
 	public string imagePath
 	{
 		get {return _imagePath;}	
@@ -393,6 +423,7 @@ public class FAtlas
 		get {return _dataPath;}	
 	}
 	
+#endif
 	public bool isSingleImage
 	{
 		get {return _isSingleImage;}	

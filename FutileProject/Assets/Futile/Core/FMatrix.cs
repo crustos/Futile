@@ -264,10 +264,12 @@ public class FMatrix
 		ty = 0;
 	}
 	
+#if !CRUST
 	override public string ToString()
 	{
 		return string.Format("[[Matrix A:{0} B:{1} C:{2} D:{3} TX:{4} TY:{5} ]]", a, b, c, d, tx,ty);
 	}
+#endif
 }
 
 

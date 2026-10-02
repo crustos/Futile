@@ -514,6 +514,7 @@ public class FTouchManager
 	
 
 
+#if !CRUST
 	public void LogAllListeners()
 	{
 		StringBuilder stringBuilder = new StringBuilder("MultiTouchables("+_multiTouchables.Count+"): ");
@@ -542,6 +543,7 @@ public class FTouchManager
 		
 		Debug.Log(stringBuilder.ToString());
 	}
+#endif
 
 	public FTouchSlot GetTouchSlot(int index)
 	{
