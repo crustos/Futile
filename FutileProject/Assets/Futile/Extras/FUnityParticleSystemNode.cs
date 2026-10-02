@@ -1,3 +1,4 @@
+#if !CRUST
 using System;
 using UnityEngine;
 
@@ -39,3 +40,4 @@ public class FUnityParticleSystemNode : FGameObjectNode
 	
 }
 
+#endif

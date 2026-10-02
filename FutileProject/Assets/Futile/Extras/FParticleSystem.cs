@@ -44,7 +44,11 @@ public class FParticleSystem : FFacetNode
 		{
 			if(element.atlas != _atlas)
 			{
+#if CRUST
+				throw (int)FutileError.ParticleAtlasMismatch;
+#else
 				throw new FutileException("All elements added to a particle system must be from the same atlas");
+#endif
 			}
 		}
 		else 
@@ -413,20 +417,24 @@ public class FParticleDefinition
     public float accelY = 1f;
 
 	
+#if !CRUST
 	public FParticleDefinition(string elementName)
 	{
 		this.element = Futile.atlasManager.GetElementWithName(elementName);	
 	}
+#endif
 	
 	public FParticleDefinition(FAtlasElement element)
 	{
 		this.element = element;
 	}
 	
+#if !CRUST
 	public void SetElementByName(string elementName)
 	{
 		this.element = Futile.atlasManager.GetElementWithName(elementName);
 	}
+#endif
 }
 
 public class FParticle

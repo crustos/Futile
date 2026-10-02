@@ -31,7 +31,11 @@ public class FRepeatSprite : FSprite
 		
 		if(!_element.atlas.isSingleImage)
 		{
+#if CRUST
+			throw (int)FutileError.NeedsSingleImage;
+#else
 			throw new FutileException("FRepeatSprite must be used with a single image, not an atlas! Use Futile.atlasManager.LoadImage()");
+#endif
 		}	
 		
 		_isAlphaDirty = true;

@@ -31,7 +31,11 @@ public class FSimpleTileMap : FMeshNode
 
 		if(_elements.Length != _cols*_rows)
 		{
+#if CRUST
+			throw (int)FutileError.BadTileMap;
+#else
 			throw new FutileException("FSimpleTileMap - the number of elements does not match the number of rows and columns. It should be cols*rows = elements.Length");
+#endif
 		}
 		
 		Init(new FMeshData(FFacetType.Quad), _elements[0].atlas.fullElement);
