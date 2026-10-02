@@ -53,7 +53,9 @@ public class FMeshData
 
 		if(facetType != facet.facetType) //check if the facet type is different from what we already have
 		{
+#if !CRUST
 			Debug.LogError("You can't mix facet types in FMeshData!");
+#endif
 		}
 
 		facets.Add(facet);
