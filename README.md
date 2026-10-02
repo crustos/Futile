@@ -1,5 +1,5 @@
 
-# Futile (2021 Edition)
+# Resistance is Futile (Crust Edition)
 
 Futile is a code-centric 2D framework for Unity. 
 
@@ -108,20 +108,47 @@ few, well-defined places.
 
 ### Status
 
-3 of the 66 non-Editor scripts translate through crust's C# subset on their
-own (`FPhysics`, `RXSignal`, `RXScroller`). Every other one stops at a named
-line with a reason. The first blockers, by how many scripts they hold up:
+The library is translated as **one unit** (`tools/crust_unit.py`; csrust takes
+several files, and an error names the file and line the author wrote). csrust
+stops at the first thing it cannot lower, so the unit is a snapshot of where the
+port is, not a count: **today it stops at `FFlipbookSprite.cs:22`**, a
+`params string[]` (step 5).
 
-| scripts | blocker | the way through |
-|---|---|---|
-| 12 | `string` (`FFacetType`, `FMatrix`, `FShader`, `FutileException`, ..) | debug / `ToString` text behind `#if !CRUST`; names resolved at pack time; `FLabel` text through unity_pack's strings |
-| 10 | a type from another file (a base class or interface) | translating the library as one unit (crust) |
-| 9 | `ref` arguments across files (`FFacetRenderLayer`, `FSprite`, `FLabel`, ..) | the same: crust lowers `ref` / `out` to a method of the same unit |
-| 5 | `params` (`FFlipbookSprite`, `FMeshData`, `RXDebug`, ..) | an array built at the call (crust), or an explicit array |
-| 4 | `event` (`FScreen`, `Futile`, `FButton`, ..) | a list of delegates; Futile's own `RXSignal` already translates |
-| 2 | `base.Method()` (`FContainer`, `FGameObjectNode`) | crust: a call to the base implementation |
-| 2 | `List.Remove` of a class (`FRenderer`, `FNode`) | reference equality, which arena classes give |
-| 1 each | `??`, `char` (`FFont`), a cycle of classes (`FAtlas`, `FTouchManager`), `out` | arena classes for the cycles; small crust lowerings for the rest |
+Done, on the crust side (crust's `futile-port` branch):
+
+* `ref` / `out` across files, including `out` of an arena class (a reference to
+  the caller's pointer); several files as one unit, bases ordered above their
+  subclasses; every struct definition emitted before any body, so two arena
+  classes can read each other's fields (`FNode` <-> `FContainer`).
+* C# `string` through coost's `fastring` (`csrust --coost`): fields, locals,
+  parameters, returns, `==`, `+`, `.Length`, `s[i]`, `char` as a byte;
+  `Dictionary<string, V>` as a string-keyed map.
+
+Done, in this repo (the Unity build is untouched -- `tools/unity_view_check.py`
+reduces every changed file, with `CRUST` undefined, to its original text):
+
+* text out of the core (step 3): `ToString` and debug messages behind
+  `#if !CRUST`; `FutileException` as error codes (`FutileError`) under CRUST;
+  `FFacetType`, `FShader`, `FStage`, `FutileParams` without names.
+* the loaders: `FAtlas`, `FAtlasManager` and `FFont` read no files under CRUST.
+  Their data is resolved when the game is packed and arrives through
+  `FAtlasManager.CreateAtlas` / `atlas.CreateNamedElement` and
+  `FAtlasManager.CreateFont` / `font.AddCharInfo` / `SetKerningInfos` /
+  `SetLineHeight`. (The packing side that calls them is not written yet.)
+* out of the build: `MiniJson`, `FSoundManager`, `RXPerformanceTester`,
+  `RXDivider`, `RXWatcher`, `RXDebug`, `FPDebugRenderer`,
+  `FUnityParticleSystemNode`, and from `RXExtensions` / `RXUtils` everything the
+  port does not call (JSON, string, list, dictionary, tween and UI helpers). The
+  colour and rect extensions, `RXColor`, `RXMath`, `RXRandom` and `RXCircle`
+  stay: the sprites call them.
+
+Known next, from the earlier per-file survey (not yet reached by the unit):
+`params` (`FFlipbookSprite`, `FMeshData`), `event` (`FScreen`, `Futile`,
+`FButton`, `FSliceButton`), `base.Method()` (`FContainer`, `FGameObjectNode`),
+`: this(..)` constructor chaining (`FSprite`, `FRepeatMeshSprite`), and the
+Unity value types (`Vector2`, `Vector3`, `Color`, `Rect`) the sprites build on,
+which crust has to supply. Slice-2 string members (`Split`, `Substring`,
+`Trim`, `string[]`, `TryGetValue`) are needed by `FLabel`'s word wrap.
 
 ### Plan, in order
 
