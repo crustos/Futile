@@ -1,3 +1,4 @@
+#if !CRUST
 
 //Based on a brilliant idea by Matthew Wegner - https://twitter.com/mwegner/status/355147544818495488
 //My implementation is super lazy with magic numbers everywhere! :D
@@ -174,4 +175,5 @@ public class RXDivider : PropertyAttribute
 	public RXDivider() {}
 }
 
+#endif
 #endif

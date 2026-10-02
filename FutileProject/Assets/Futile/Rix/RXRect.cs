@@ -36,6 +36,7 @@ public class RXRect
 		);
 	}
 
+#if !CRUST
 	public void Log(string name)
 	{
 		Debug.Log(name + " x:"+x+" y:"+y+ " w:"+width+" h:"+height);
@@ -45,6 +46,7 @@ public class RXRect
 	{
 		return "x:"+x+" y:"+y+ " w:"+width+" h:"+height;
 	}
+#endif
 
 	public RXRect Clone()
 	{

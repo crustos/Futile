@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 
+#if !CRUST
 public static class RXUtils
 {
 	public static StringBuilder sb = new StringBuilder(1000); //global stringbuilder for use anywhere
@@ -169,7 +170,9 @@ public static class RXUtils
         return mysterySB.ToString();
     }
 }
+#endif
 
+#if !CRUST
 public static class RXArrayUtil
 {
 	public static T[] CreateArrayFilledWithItem<T> (T item, int count)
@@ -204,6 +207,7 @@ public static class RXArrayUtil
 		}
 	}
 }
+#endif
 
 public class RXColorHSL
 {
@@ -224,16 +228,20 @@ public class RXColorHSL
 public static class RXColor
 {
 	//TODO: IMPLEMENT THIS
+#if !CRUST
 	public static Color ColorFromRGBString(string rgbString)
 	{
 		return Color.red;
 	}
+#endif
 	
 	//TODO: IMPLEMENT THIS
+#if !CRUST
 	public static Color ColorFromHSLString(string hslString)
 	{
 		return Color.green;
 	}
+#endif
 	
 	public static Color ColorFromHSL(RXColorHSL hsl)
 	{
@@ -692,20 +700,26 @@ public static class RXRandom
 	}
 
 	//random item from all passed arguments/params - RXRandom.GetRandomItem(one, two, three);
+#if !CRUST
 	public static object GetRandomItem(params object[] objects)
 	{
 		return objects[_randomSource.Next() % objects.Length];
 	}
+#endif
 
+#if !CRUST
     public static T GetRandomItem<T>(params T[] objects)
     {
         return objects[_randomSource.Next() % objects.Length];
     }
+#endif
 
+#if !CRUST
     public static string GetRandomString(params string[] strings)
 	{
 		return strings[_randomSource.Next() % strings.Length];
 	}
+#endif
 
 	public static Color Color(float alpha = 1f)
 	{
@@ -829,8 +843,11 @@ public static class RXRandom
 		return 1;
 	}
 
+#if !CRUST
 	public const string randomChars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+#endif
 
+#if !CRUST
 	public static string GenerateRandomString(int numChars)
 	{
 		string result = "";
@@ -840,6 +857,7 @@ public static class RXRandom
 		}
 		return result;
 	}
+#endif
 
 }
 
@@ -868,6 +886,7 @@ public class RXCircle
 //note that they only take a t variable (which should be between 0 and 1) and return a value between 0 and 1
 //these equations could be improved a LOT with some factoring 
 //consider using http://www.algebrahelp.com/calculators/expression/oops/ or http://www.webmath.com/anything.html to make things easier
+#if !CRUST
 public static class RXEase
 {
 	public delegate float Dele(float t);
@@ -900,11 +919,13 @@ public static class RXEase
 	}
 
 }
+#endif
 
 
 //converts the simple equations in RXEase into the standard t b c d format
 //where t = current time, b = starting value, c = final value, d = duration
 //(I don't really have a great use case for this, but it was a fun class to make :D)
+#if !CRUST
 public static class RXEaseStandard
 {
 	public static Dele Linear = 		Standardize(RXEase.Linear);
@@ -937,8 +958,10 @@ public static class RXEaseStandard
 		};
 	}
 }
+#endif
 
 //a handy class for keeping tweened values encapsulated
+#if !CRUST
 public class RXTweenable
 {
 	private float _amount;
@@ -987,8 +1010,10 @@ public class RXTweenable
 		return rt;
 	}
 }
+#endif
 
 //the GoKit tweenchain was causing errors so I decided to make a simpler one
+#if !CRUST
 public class RXTweenChain
 {
 	public List<Tween> tweensToDo = new List<Tween>();
@@ -1023,37 +1048,49 @@ public class RXTweenChain
 		nextTween.play();
 	}
 }
+#endif
 
+#if !CRUST
 public class BoxedLong
 {
 	public long value;
 	public BoxedLong(long value) { this.value = value; }
 }
+#endif
 
+#if !CRUST
 public class BoxedInt
 {
 	public int value;
 	public BoxedInt(int value) { this.value = value; }
 }
+#endif
 
+#if !CRUST
 public class BoxedFloat
 {
 	public float value;
 	public BoxedFloat(float value) { this.value = value; }
 }
+#endif
 
+#if !CRUST
 public class BoxedDouble
 {
 	public double value;
 	public BoxedDouble(double value) { this.value = value; }
 }
+#endif
 
+#if !CRUST
 public class BoxedBool
 {
 	public bool value;
 	public BoxedBool(bool value) { this.value = value; }
 }
+#endif
 
+#if !CRUST
 public class RXCurveUtils
 {
 	static public void RestrictCurveTimeAndValue(AnimationCurve curve, float startValue = 0f, float endValue = 1f)
@@ -1084,3 +1121,4 @@ public class RXCurveUtils
 		curve.MoveKey(curve.keys.Length-1,key);
 	}
 }
+#endif

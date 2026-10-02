@@ -37,6 +37,7 @@ public static class RXColorExtensions
 		targetColor.a = color.a*alpha;
 	}
 
+#if !CRUST
 	public static string ToHexString(this Color color)
 	{
 		int r = Mathf.RoundToInt(color.r * 255.0f);
@@ -45,6 +46,7 @@ public static class RXColorExtensions
 		string hexStr = r.ToString("X2") + g.ToString("X2") + b.ToString("X2");
 		return hexStr;
 	}
+#endif
 }
 
 public static class RXRectExtensions
@@ -170,6 +172,7 @@ public static class RXRectExtensions
 	}
 }
 
+#if !CRUST
 public static class RXGoKitExtensions
 {
 	//this makes it so we don't have to specify false for isRelative every.single.time.
@@ -299,7 +302,9 @@ public static class RXGoKitExtensions
 	}
 
 }
+#endif
 
+#if !CRUST
 public static class RXArrayExtensions
 {
 	public static int IndexOf<T>(this T[] items, T itemToFind) where T:class
@@ -368,7 +373,9 @@ public static class RXArrayExtensions
 		return items[(index%length + length)%length];
 	}
 }
+#endif
 
+#if !CRUST
 public static class RXListExtensions
 {
 	public static void Log<T>(this List<T> list) {list.Log("");}
@@ -486,7 +493,9 @@ public static class RXListExtensions
 		return didChange;
 	}
 }
+#endif
 
+#if !CRUST
 public static class RXDictionaryExtensions
 {
 	public static int GetInt(this Dictionary<string,object> dict, string key, int defaultValue)
@@ -624,7 +633,9 @@ public static class RXDictionaryExtensions
 		}
 	}
 }
+#endif
 
+#if !CRUST
 public static class RXStringExtensions
 {
 	public static string Format(this string @this, params object[] args)
@@ -637,7 +648,9 @@ public static class RXStringExtensions
 		return char.ToUpper(@this[0]) + @this.Substring(1).ToLower();
 	}
 }
+#endif
 
+#if !CRUST
 public static class RXIntExtensions
 {
 	public static string PluralS(this int @this)
@@ -645,7 +658,9 @@ public static class RXIntExtensions
 		return (@this == 1 ? "" : "s");
 	}
 }
+#endif
 
+#if !CRUST
 public static class RXVector2Extensions
 {
 	public static string ToStringDetailed(this Vector2 @this)
@@ -653,7 +668,9 @@ public static class RXVector2Extensions
 		return "("+@this.x.ToString()+","+@this.y.ToString()+")";
 	}
 }
+#endif
 
+#if !CRUST
 public static class RXGUIExtensions
 {
 	public static void SetAllStateTextColors(this GUIStyle style, Color color)
@@ -668,7 +685,9 @@ public static class RXGUIExtensions
 		style.onFocused.textColor = color;
 	}
 }
+#endif
 
+#if !CRUST
 public static class RXUIExtensions
 {
 	public static void SetSize(this RectTransform rt, float width, float height)
@@ -677,7 +696,9 @@ public static class RXUIExtensions
 		rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,height);
 	}
 }
+#endif
 
+#if !CRUST
 public static class RXTransformExtensions
 {
 	public static void Reset(this Transform trans)
@@ -687,7 +708,9 @@ public static class RXTransformExtensions
         trans.localRotation = Quaternion.identity;
 	}
 }
+#endif
 
+#if !CRUST
 public static class RXEventExtensions
 {
 	public static EventTrigger.Entry AddTrigger(this EventTrigger trigger, EventTriggerType eventType, UnityAction<BaseEventData> callback)
@@ -701,3 +724,4 @@ public static class RXEventExtensions
 		return entry;
 	}
 }
+#endif
