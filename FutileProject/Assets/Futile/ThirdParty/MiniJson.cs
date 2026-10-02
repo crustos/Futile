@@ -1,3 +1,4 @@
+#if !CRUST
 /*
  * Copyright (c) 2012 Calvin Rien
  *
@@ -703,3 +704,4 @@ public static class MiniJsonExtensions
 }
 
 #endregion
+#endif
