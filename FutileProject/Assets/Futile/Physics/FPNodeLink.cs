@@ -19,7 +19,9 @@ public class FPNodeLink : MonoBehaviour
 	{
 		if (_node == null)
 		{
+#if !CRUST
 			Debug.Log("_node is null for GameObject: " + gameObject.name);
+#endif
 		}
 		
 		if(_shouldUseLocalPosition)

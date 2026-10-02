@@ -1,3 +1,4 @@
+#if !CRUST
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -131,3 +132,4 @@ public class FPDebugRenderer : MonoBehaviour
 
 }
 
+#endif
