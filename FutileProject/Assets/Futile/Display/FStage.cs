@@ -18,7 +18,9 @@ public class FStage : FContainer
 	
 	private FRenderer _renderer;
 	
+#if !CRUST
 	private string _name;
+#endif
 	
 	private FMatrix _identityMatrix;
 	
@@ -33,9 +35,14 @@ public class FStage : FContainer
 
     private int _layer = 0;
 	
+#if CRUST
+	public FStage() : base() //crust: stages are not named (the name only labelled Unity GameObjects)
+	{
+#else
 	public FStage(string name) : base()
 	{
 		_name = name;
+#endif
 		
 		_stage = this;
 		
@@ -270,10 +277,12 @@ public class FStage : FContainer
 		get {return _renderer;}	
 	}
 	
+#if !CRUST
 	public string name
 	{
 		get {return _name;}	
 	}
+#endif
 	
 	public FStageTransform transform
 	{

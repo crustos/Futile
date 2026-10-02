@@ -600,7 +600,9 @@ public class FNode
 		}
 		else
 		{
+#if !CRUST
 			Debug.LogWarning("Futile: Warning! You're probably trying to use GlobalToLocal/LocalToLocal with an object that isn't currently part of the display list");
+#endif
 		}
 	}
 	
